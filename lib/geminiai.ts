@@ -31,8 +31,8 @@ export async function generateSummaryFromGemini(pdfText: string) {
 
     // For @google/generative-ai v0.7.0+ use result.response.text()
     // For older versions, use result.response.text
-    const text = typeof result.response === "function"
-      ? await result.response().then((r: any) => r.text())
+    const text = typeof result.response.text === "function"
+      ? await result.response.text()
       : result.response.text;
 
     if (!text) {
