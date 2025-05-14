@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import { Source_Sans_3 as FontSans } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
-
+import "@uploadthing/react/styles.css";
+import { Toaster } from "@/components/ui/sonner";
+import Header from "@/components/common/Header";
+import { ThemeProvider } from "next-themes";
 
 const fontSans = FontSans({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
-
-
 
 export const metadata: Metadata = {
   title: "Saaransh - AI-Powered PDF Summarizer",
@@ -26,15 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${fontSans.variable} font-sans antialiased`}
-      >
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${fontSans.variable} font-sans antialiased`}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Header />
+            <main>{children}</main>
+            <Toaster />
+            <Footer />
+          </ThemeProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

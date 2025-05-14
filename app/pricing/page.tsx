@@ -9,16 +9,23 @@ interface PricingFeatureProps {
   included?: boolean;
 }
 
-const PricingFeature = ({
-  children,
-  included = true,
-}: PricingFeatureProps) => {
+const PricingFeature = ({ children, included = true }: PricingFeatureProps) => {
   return (
     <div className="flex items-center space-x-2">
-      <div className={cn("rounded-full p-1", included ? "text-primary" : "text-muted-foreground/50")}>
+      <div
+        className={cn(
+          "rounded-full p-1",
+          included ? "text-primary" : "text-muted-foreground/50"
+        )}
+      >
         <Check size={16} />
       </div>
-      <span className={cn("text-sm", included ? "text-foreground" : "text-muted-foreground/50")}>
+      <span
+        className={cn(
+          "text-sm",
+          included ? "text-foreground" : "text-muted-foreground/50"
+        )}
+      >
         {children}
       </span>
     </div>
@@ -34,7 +41,8 @@ const PricingSection = () => {
             Simple, transparent pricing
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the plan that is right for you and start summarizing PDFs today.
+            Choose the plan that is right for you and start summarizing PDFs
+            today.
           </p>
         </div>
 
@@ -45,8 +53,12 @@ const PricingSection = () => {
               <div>
                 <h3 className="text-xl font-semibold text-foreground">Basic</h3>
                 <div className="mt-4 flex items-baseline">
-                  <span className="text-4xl font-bold tracking-tight text-foreground">$9</span>
-                  <span className="ml-1 text-lg text-muted-foreground">/month</span>
+                  <span className="text-4xl font-bold tracking-tight text-foreground">
+                    $9
+                  </span>
+                  <span className="ml-1 text-lg text-muted-foreground">
+                    /month
+                  </span>
                 </div>
                 <p className="mt-4 text-muted-foreground">
                   Perfect for occasional users who need basic PDF summaries.
@@ -57,10 +69,18 @@ const PricingSection = () => {
                 <PricingFeature>5 PDF summaries per month</PricingFeature>
                 <PricingFeature>Standard processing time</PricingFeature>
                 <PricingFeature>Email support</PricingFeature>
-                <PricingFeature included={false}>Unlimited PDF summaries</PricingFeature>
-                <PricingFeature included={false}>Priority processing</PricingFeature>
-                <PricingFeature included={false}>24/7 Priority support</PricingFeature>
-                <PricingFeature included={false}>Markdown export</PricingFeature>
+                <PricingFeature included={false}>
+                  Unlimited PDF summaries
+                </PricingFeature>
+                <PricingFeature included={false}>
+                  Priority processing
+                </PricingFeature>
+                <PricingFeature included={false}>
+                  24/7 Priority support
+                </PricingFeature>
+                <PricingFeature included={false}>
+                  Markdown export
+                </PricingFeature>
               </div>
 
               <Button className="mt-8 w-full" variant="outline">
@@ -80,20 +100,27 @@ const PricingSection = () => {
               <div>
                 <h3 className="text-xl font-semibold text-foreground">Pro</h3>
                 <div className="mt-4 flex items-baseline">
-                  <span className="text-4xl font-bold tracking-tight text-primary">$19</span>
-                  <span className="ml-1 text-lg text-muted-foreground">/month</span>
+                  <span className="text-4xl font-bold tracking-tight text-primary">
+                    $19
+                  </span>
+                  <span className="ml-1 text-lg text-muted-foreground">
+                    /month
+                  </span>
                 </div>
                 <p className="mt-4 text-muted-foreground">
-                  For power users who need unlimited summaries and premium features.
+                  For power users who need unlimited summaries and premium
+                  features.
                 </p>
               </div>
 
               <div className="mt-6 space-y-3 flex-1">
                 <PricingFeature>
-                  <span className="font-medium text-primary">Unlimited</span> PDF summaries
+                  <span className="font-medium text-primary">Unlimited</span>{" "}
+                  PDF summaries
                 </PricingFeature>
                 <PricingFeature>
-                  <span className="font-medium text-primary">Priority</span> processing
+                  <span className="font-medium text-primary">Priority</span>{" "}
+                  processing
                 </PricingFeature>
                 <PricingFeature>24/7 Priority support</PricingFeature>
                 <PricingFeature>Markdown export</PricingFeature>
@@ -109,7 +136,8 @@ const PricingSection = () => {
 
         <div className="mt-12 text-center">
           <p className="text-sm text-muted-foreground">
-            All plans come with a 14-day money-back guarantee. No questions asked.
+            All plans come with a 14-day money-back guarantee. No questions
+            asked.
           </p>
         </div>
       </div>

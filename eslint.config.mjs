@@ -10,6 +10,14 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    // Enable Node.js and browser globals
+    env: {
+      node: true,
+      browser: true,
+      es2021: true,
+    },
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
