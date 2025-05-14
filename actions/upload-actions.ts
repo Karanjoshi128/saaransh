@@ -1,6 +1,6 @@
 "use server";
 
-import { generateSummaryFromGemini } from "@/lib/geminiai";
+// import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
 import { generateSummaryFromHuggingFace } from "@/lib/huggingface";
 import { generateSummaryFromOpenAI } from "@/lib/openai";

@@ -9,16 +9,26 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+export default [
+  // Replace old "env" usage with compat.env() or appropriate configs
+  ...compat.env({
+    browser: true,
+    node: true,
+    es2021: true,
+  }),
+
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+
   {
-    // Enable Node.js and browser globals
-    env: {
-      node: true,
-      browser: true,
-      es2021: true,
+    files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: 2021,
+        sourceType: "module",
+      },
+    },
+    rules: {
+      // add any custom rules here
     },
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
-
-export default eslintConfig;
