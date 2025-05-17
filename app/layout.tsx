@@ -27,6 +27,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          {/* Use the public path for favicon, not the imported Logo variable */}
+          <link rel="icon" href="/circle_logo.png" type="image/png" />
+        </head>
         <body className={`${fontSans.variable} font-sans antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Header />

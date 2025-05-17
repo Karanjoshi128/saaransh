@@ -16,9 +16,9 @@ function RotatingPdf() {
         <meshStandardMaterial color="#be185d" roughness={0.3} metalness={0.2} />
       </mesh>
       <Html position={[0, 0, 0.15]} center>
-        <div className="bg-white/90 rounded px-2 py-1 text-xs font-bold text-primary shadow">
+        {/* <div className="bg-white/90 rounded px-2 py-1 text-xs font-bold text-primary shadow">
           PDF
-        </div>
+        </div> */}
       </Html>
     </Float>
   );

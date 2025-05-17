@@ -1,10 +1,19 @@
 "use server";
+import { Client } from 'pg';
 
 // import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
 import { generateSummaryFromHuggingFace } from "@/lib/huggingface";
-import { generateSummaryFromOpenAI } from "@/lib/openai";
+// import { generateSummaryFromOpenAI } from "@/lib/openai";
 
+interface StorePdfSummaryParams {
+  user_id: string;
+  original_file_url: string;
+  summary_text: string;
+  title?: string;
+  file_name?: string;
+  status?: string;
+}
 export async function generatePdfSummary(
   uploadResponse: [
     {
@@ -30,6 +39,7 @@ export async function generatePdfSummary(
     serverData: {
       userID,
       file: { url: pdfUrl, name: fileName },
+      title: name,
     },
   } = uploadResponse[0];
 
@@ -75,6 +85,47 @@ export async function generatePdfSummary(
 }
 
 
-export async function storePdfSummaryaction () {
 
+export async function storePdfSummaryAction({
+  user_id,
+  original_file_url,
+  summary_text,
+  title,
+  file_name,
+  status = 'completed',
+}: StorePdfSummaryParams) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+
+  await client.connect();
+
+  const query = `
+    INSERT INTO pdf_summaries (
+      user_id,
+      original_file_url,
+      summary_text,
+      status,
+      title,
+      file_name
+    ) VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *;
+  `;
+
+  const values = [
+    user_id,
+    original_file_url,
+    summary_text,
+    status,
+    title || null,
+    file_name || null,
+  ];
+
+  try {
+    const res = await client.query(query, values);
+    return res.rows[0];
+  } finally {
+    await client.end();
+  }
 }

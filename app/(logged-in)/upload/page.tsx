@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { UploadDropzone } from "@/utils/uploadthing";
-import {generatePdfSummary} from "@/actions/upload-actions";
+import { generatePdfSummary, storePdfSummaryAction } from "@/actions/upload-actions";
+
 
 const UploadPage = () => {
   const [summary, setSummary] = useState<string>("");
@@ -39,6 +40,7 @@ const UploadPage = () => {
                       url: file.ufsUrl,
                       name: file.name,
                     },
+                    title : file.name,
                   },
                 }));
                 try {
@@ -46,6 +48,15 @@ const UploadPage = () => {
                   const summary = await generatePdfSummary([formattedRes[0]]);
                   setSummary(summary.data); // Store summary in state
                   console.log(summary);
+
+                  // Store summary in the database
+                  await storePdfSummaryAction({
+                    user_id: formattedRes[0].serverData.userID,
+                    original_file_url: formattedRes[0].serverData.file.url,
+                    summary_text: summary.data,
+                    file_name: formattedRes[0].serverData.file.name,
+                  });
+                  toast.success("Summary saved to database!");
                 } catch (err) {
                   toast.error("Summary generation failed", {
                     description: "There was an error generating the summary.",
