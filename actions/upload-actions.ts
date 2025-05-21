@@ -1,9 +1,8 @@
 "use server";
-import { Client } from 'pg';
-
+// import { Client } from "pg";
 // import { generateSummaryFromGemini } from "@/lib/geminiai";
-import { fetchAndExtractPdfText } from "@/lib/langchain";
-import { generateSummaryFromHuggingFace } from "@/lib/huggingface";
+// import { generateSummaryFromHuggingFace } from "@/lib/huggingface";
+import { generateSummaryFromNvidiaLLM } from "@/lib/nvidiaLLM";
 // import { generateSummaryFromOpenAI } from "@/lib/openai";
 
 interface StorePdfSummaryParams {
@@ -37,9 +36,7 @@ export async function generatePdfSummary(
 
   const {
     serverData: {
-      userID,
       file: { url: pdfUrl, name: fileName },
-      title: name,
     },
   } = uploadResponse[0];
 
@@ -52,12 +49,15 @@ export async function generatePdfSummary(
   }
 
   try {
-    const pdfText = await fetchAndExtractPdfText(pdfUrl);
-    console.log("PDF Text: ", pdfText);
+    // Fetch the PDF file as a Blob
+    const pdfResponse = await fetch(pdfUrl);
+    if (!pdfResponse.ok) {
+      throw new Error("Failed to fetch PDF file");
+    }
+    const pdfBlob = await pdfResponse.blob();
     try {
-        const summary = await generateSummaryFromHuggingFace(pdfText);
-      // const summary = await generateSummaryFromGemini(pdfText);
-      //   const summary = await generateSummaryFromOpenAI(pdfText);
+      // Directly send the PDF file to the NVIDIA LLM summarizer
+      const summary = await generateSummaryFromNvidiaLLM(pdfBlob);
       if (summary) {
         console.log("Summary: ", summary);
       }
@@ -68,23 +68,64 @@ export async function generatePdfSummary(
       };
     } catch (error) {
       console.log(error);
-
       return {
         success: false,
-        message: "Error generating summary from hugging face",
+        message: "Error generating summary from NVIDIA LLM",
         data: null,
       };
     }
-  } catch (err) {
+  } catch {
     return {
       success: false,
-      message: "Error generating summary",
+      message: "Error fetching PDF file",
       data: null,
     };
   }
 }
 
+// export async function storePdfSummaryAction({
+//   user_id,
+//   original_file_url,
+//   summary_text,
+//   title,
+//   file_name,
+//   status = "completed",
+// }: StorePdfSummaryParams) {
+//   const client = new Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: { rejectUnauthorized: false },
+//   });
 
+//   await client.connect();
+
+//   const query = `
+//     INSERT INTO pdf_summaries (
+//       user_id,
+//       original_file_url,
+//       summary_text,
+//       status,
+//       title,
+//       file_name
+//     ) VALUES ($1, $2, $3, $4, $5, $6)
+//     RETURNING *;
+//   `;
+
+//   const values = [
+//     user_id,
+//     original_file_url,
+//     summary_text,
+//     status,
+//     title || null,
+//     file_name || null,
+//   ];
+
+//   try {
+//     const res = await client.query(query, values);
+//     return res.rows[0];
+//   } finally {
+//     await client.end();
+//   }
+// }
 
 export async function storePdfSummaryAction({
   user_id,
@@ -92,40 +133,7 @@ export async function storePdfSummaryAction({
   summary_text,
   title,
   file_name,
-  status = 'completed',
+  status = "completed",
 }: StorePdfSummaryParams) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-  });
-
-  await client.connect();
-
-  const query = `
-    INSERT INTO pdf_summaries (
-      user_id,
-      original_file_url,
-      summary_text,
-      status,
-      title,
-      file_name
-    ) VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING *;
-  `;
-
-  const values = [
-    user_id,
-    original_file_url,
-    summary_text,
-    status,
-    title || null,
-    file_name || null,
-  ];
-
-  try {
-    const res = await client.query(query, values);
-    return res.rows[0];
-  } finally {
-    await client.end();
-  }
+  console.log("Saving into NeonDb On hold");
 }

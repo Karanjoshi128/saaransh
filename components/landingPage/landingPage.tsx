@@ -19,6 +19,7 @@ export default function LandingPage() {
               Summarize PDFs with AI.
             </span>
           </h1>
+          {/* <canvas className="w-full h-64" border-2 border-white>Hello</canvas> */}
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
             Saaransh empowers you to extract the essence of any document in seconds. Upload, summarize, and understand—no more endless scrolling or information overload.
           </p>

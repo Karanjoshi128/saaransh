@@ -1,4 +1,6 @@
-import React from "react";
+'use client'
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +10,8 @@ interface PricingFeatureProps {
   children: React.ReactNode;
   included?: boolean;
 }
+
+
 
 const PricingFeature = ({ children, included = true }: PricingFeatureProps) => {
   return (
@@ -33,6 +37,39 @@ const PricingFeature = ({ children, included = true }: PricingFeatureProps) => {
 };
 
 const PricingSection = () => {
+  const [loading, setLoading] = useState(false);
+
+
+
+  const handleCheckoutBasic = async () => {
+    setLoading(true);
+    const res = await fetch('/api/checkoutBasic', { method: 'POST' });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Failed to redirect to checkout.');
+    }
+    setLoading(false);
+  };
+
+
+
+
+  const handleCheckoutPro = async () => {
+    setLoading(true);
+    const res = await fetch('/api/checkoutPro', { method: 'POST' });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Failed to redirect to checkout.');
+    }
+    setLoading(false);
+  };
+
+
+
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="max-w-7xl mx-auto">
@@ -54,7 +91,7 @@ const PricingSection = () => {
                 <h3 className="text-xl font-semibold text-foreground">Basic</h3>
                 <div className="mt-4 flex items-baseline">
                   <span className="text-4xl font-bold tracking-tight text-foreground">
-                    $9
+                    99 ₹
                   </span>
                   <span className="ml-1 text-lg text-muted-foreground">
                     /month
@@ -83,8 +120,10 @@ const PricingSection = () => {
                 </PricingFeature>
               </div>
 
-              <Button className="mt-8 w-full" variant="outline">
-                Get Started
+              <Button className="mt-8 w-full" variant="outline" onClick={handleCheckoutBasic} disabled={loading}>
+                
+                  <span>Get Started</span>
+              
               </Button>
             </div>
           </div>
@@ -101,7 +140,7 @@ const PricingSection = () => {
                 <h3 className="text-xl font-semibold text-foreground">Pro</h3>
                 <div className="mt-4 flex items-baseline">
                   <span className="text-4xl font-bold tracking-tight text-primary">
-                    $19
+                    499 ₹
                   </span>
                   <span className="ml-1 text-lg text-muted-foreground">
                     /month
@@ -127,7 +166,7 @@ const PricingSection = () => {
                 <PricingFeature>All Basic features</PricingFeature>
               </div>
 
-              <Button className="mt-8 w-full" variant="default">
+              <Button className="mt-8 w-full" variant="default" onClick={handleCheckoutPro} disabled={loading}>
                 Get Started
               </Button>
             </div>

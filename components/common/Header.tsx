@@ -1,26 +1,33 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from 'lucide-react';
-import {
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs';
+import { Menu, X } from "lucide-react";
+import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [credits, setCredits] = useState<number | null>(null);
 
-  const toggleLoginStatus = () => {
-    setIsLoggedIn(!isLoggedIn);
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      fetch("/api/credits")
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.credits === "number") setCredits(data.credits);
+        });
+    }
+  }, [mounted]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -38,7 +45,10 @@ const Header = () => {
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-              <Link href="/pricing" className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium">
+              <Link
+                href="/pricing"
+                className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium"
+              >
                 Pricing
               </Link>
               <Link href="/upload">
@@ -52,29 +62,39 @@ const Header = () => {
           {/* Theme Toggle */}
           <div className="flex items-center gap-4">
             <div className="flex items-center">
-              <Label htmlFor="theme-toggle" className="mr-2">
-                {theme === "dark" ? "Dark" : "Light"} Mode
-              </Label>
-              <Switch
-                id="theme-toggle"
-                checked={theme === "dark"}
-                onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-              />
+              {mounted && (
+                <>
+                  <Label htmlFor="theme-toggle" className="mr-2">
+                    {theme === "dark" ? "Dark" : "Light"} Mode
+                  </Label>
+                  <Switch
+                    id="theme-toggle"
+                    checked={theme === "dark"}
+                    onCheckedChange={(checked) =>
+                      setTheme(checked ? "dark" : "light")
+                    }
+                  />
+                </>
+              )}
             </div>
 
             {/* Desktop auth buttons */}
-            <div className="hidden sm:flex sm:items-center">
-              {isLoggedIn ? (
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              ) : (
-                <SignedOut>
+            <div className="flex items-center gap-2">
+              <SignedIn>
+                {credits !== null && (
+                  <span className="text-xs text-muted-foreground mr-2">
+                    Credits: {credits}
+                  </span>
+                )}
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal">
                   <Button variant="default" className="ml-4">
                     Sign In
                   </Button>
-                </SignedOut>
-              )}
+                </SignInButton>
+              </SignedOut>
             </div>
 
             {/* Mobile menu button */}
@@ -100,27 +120,11 @@ const Header = () => {
       {isMenuOpen && (
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            <Link href="/pricing" className="text-foreground hover:text-primary block px-3 py-2 text-base font-medium">
-              Pricing
-            </Link>
             <Link href="/upload">
               <Button variant="secondary" className="w-full mt-2">
                 Upload a PDF
               </Button>
             </Link>
-          </div>
-          <div className="pt-4 pb-3 border-t border-border">
-            <div className="flex items-center px-4">
-              {true ? (
-                <Button variant="outline" onClick={toggleLoginStatus} className="w-full">
-                  Sign up
-                </Button>
-              ) : (
-                <Button variant="default" onClick={toggleLoginStatus} className="w-full">
-                  Sign in
-                </Button>
-              )}
-            </div>
           </div>
         </div>
       )}
