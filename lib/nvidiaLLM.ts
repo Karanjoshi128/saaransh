@@ -19,7 +19,7 @@ export async function generateSummaryFromNvidiaLLM(
 
   try {
     const response = await axios.post(
-      "http://localhost:5000/summarize",
+      "https://nvidiallm-summarizer.onrender.com/summarize",
       formData,
       {
         headers: {
