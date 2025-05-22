@@ -28,7 +28,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <head>
-          <link rel="icon" href="/circle_logo.png" type="image/png" />
+          <link rel="icon" href="/Trans_logo.svg" type="image/svg+xml" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </head>
         <body className={`${fontSans.variable} font-sans antialiased`}>

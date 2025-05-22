@@ -117,13 +117,18 @@ const UploadPage = () => {
           <CardContent>
             <div className="flex flex-col items-center justify-center w-full">
               <input
+                id="file-upload"
                 type="file"
                 accept="application/pdf"
                 onChange={handleFileChange}
-                className="block mx-auto w-full max-w-xs text-sm text-foreground file:mx-auto file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                style={{ display: "none" }}
                 disabled={loading}
-                style={{ display: "block" }}
               />
+              <label htmlFor="file-upload">
+                <span className="px-4 py-2 bg-secondary text-primary border border-primary rounded cursor-pointer hover:bg-secondary/80 disabled:opacity-60 inline-block shadow-sm transition-all font-bold">
+                  {selectedFile ? "Change PDF" : "Upload PDF"}
+                </span>
+              </label>
               {selectedFile && (
                 <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                   <span className="text-sm text-foreground text-center">
