@@ -62,7 +62,7 @@ const Header = () => {
           {/* Theme Toggle */}
           <div className="flex items-center gap-4">
             <div className="flex items-center">
-              {mounted && (
+              {mounted ? (
                 <>
                   <Label htmlFor="theme-toggle" className="mr-2">
                     {theme === "dark" ? "Dark" : "Light"} Mode
@@ -75,7 +75,7 @@ const Header = () => {
                     }
                   />
                 </>
-              )}
+              ) : null}
             </div>
 
             {/* Desktop auth buttons */}
